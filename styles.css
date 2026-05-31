@@ -985,7 +985,7 @@ ul {
   overflow: hidden;
   position: relative;
   cursor: pointer;
-  height: 300px;
+  height: 280px;
   background: var(--card);
 }
 
@@ -1417,67 +1417,46 @@ ul {
   align-items: start;
 }
 
-.barber-image-wrap {
+/* Staggered two-photo barber layout */
+.barber-photos {
   position: relative;
+  padding-bottom: 72px;
+  padding-right: 40px;
 }
 
-.barber-image-box {
-  aspect-ratio: 3/4;
-  background: var(--card);
-  border: 1px solid var(--border-light);
+.barber-photo-main {
+  width: 88%;
   border-radius: var(--radius-md);
   overflow: hidden;
-  position: relative;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,76,0.08);
+  border: 1px solid var(--border-light);
+  box-shadow: 0 24px 64px rgba(0,0,0,0.55), 0 0 0 1px rgba(201,168,76,0.1);
 }
 
-.barber-image-box img {
+.barber-photo-main img {
   width: 100%;
-  height: 100%;
+  display: block;
   object-fit: cover;
   object-position: center top;
-  display: block;
+  aspect-ratio: 3/4;
 }
 
-.barber-accent-frame {
+.barber-photo-secondary {
   position: absolute;
-  top: -12px;
-  right: -12px;
-  bottom: 12px;
-  left: 12px;
-  border: 1px solid var(--gold-dim);
+  bottom: 0;
+  right: 0;
+  width: 56%;
   border-radius: var(--radius-md);
-  z-index: -1;
-  opacity: 0.4;
+  overflow: hidden;
+  border: 3px solid var(--bg);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,168,76,0.15);
 }
 
-.barber-mini-stat {
-  position: absolute;
-  bottom: -20px;
-  right: -20px;
-  background: var(--card);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-md);
-  padding: 20px 24px;
-  text-align: center;
-}
-
-.barber-mini-stat-num {
-  font-family: var(--font-heading);
-  font-size: 2.25rem;
-  font-weight: 900;
-  color: var(--gold);
-  line-height: 1;
+.barber-photo-secondary img {
+  width: 100%;
   display: block;
-}
-
-.barber-mini-stat-label {
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-top: 4px;
-  display: block;
+  object-fit: cover;
+  object-position: center top;
+  aspect-ratio: 1;
 }
 
 .barber-text {}
@@ -1743,6 +1722,49 @@ ul {
   flex-shrink: 0;
   margin-top: 1px;
   color: var(--gold);
+}
+
+.booking-contact-block {
+  margin-top: 24px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px 22px;
+}
+
+.booking-contact-title {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+}
+
+.booking-contact-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+.booking-contact-row:last-child {
+  border-bottom: none;
+}
+
+.booking-contact-row:hover {
+  color: var(--gold);
+}
+
+.booking-contact-row svg {
+  flex-shrink: 0;
+  color: var(--gold);
+  opacity: 0.7;
 }
 
 /* Form */
@@ -2067,8 +2089,8 @@ body.page-booking  .nav-link-booking::after {
     gap: 48px;
   }
 
-  .barber-image-wrap {
-    max-width: 360px;
+  .barber-photos {
+    max-width: 400px;
   }
 
   .why-choose-inner {
@@ -2192,10 +2214,6 @@ body.page-booking  .nav-link-booking::after {
     grid-column: span 1;
   }
 
-  .barber-mini-stat {
-    right: 0;
-    bottom: -10px;
-  }
 }
 
 /* ============================================
@@ -2338,6 +2356,27 @@ body.page-booking  .nav-link-booking::after {
 
   .barber-name {
     font-size: 2rem;
+  }
+
+  .barber-photos {
+    padding-bottom: 0;
+    padding-right: 0;
+  }
+
+  .barber-photo-main {
+    width: 100%;
+  }
+
+  .barber-photo-secondary {
+    position: static;
+    width: 100%;
+    margin-top: 16px;
+    border: none;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+
+  .barber-photo-secondary img {
+    aspect-ratio: 4/3;
   }
 
   .why-item {
