@@ -15,12 +15,12 @@
     <div class="nav-inner">
       <a href="index.html" class="nav-logo">Ghost<span>Barbers</span></a>
       <div class="nav-links">
-        <a href="index.html" class="nav-link-home">Home</a>
-        <a href="about.html" class="nav-link-about active">About</a>
-        <a href="booking.html" class="nav-link-booking">Book Now</a>
+        <a href="index.html" class="nav-link-home" data-en="Home" data-hi="होम">Home</a>
+        <a href="about.html" class="nav-link-about active" data-en="About" data-hi="बारे में">About</a>
+        <a href="booking.html" class="nav-link-booking" data-en="Book Now" data-hi="अभी बुक करो">Book Now</a>
       </div>
-      <button class="lang-toggle" id="langToggle" onclick="swapLanguage()" aria-label="Toggle language">EN | हर</button>
-      <a href="booking.html" class="nav-book">Book Now</a>
+      <button class="lang-toggle" id="langToggle" onclick="swapLanguage()" aria-label="Toggle language">EN | हरि</button>
+      <a href="booking.html" class="nav-book" data-en="Book Now" data-hi="बुक करो">Book Now</a>
       <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
         <span></span><span></span><span></span>
       </button>
@@ -69,25 +69,20 @@
 
           <div class="barber-text fade-in fade-in-delay-1">
             <h2 class="barber-name">Your Barber</h2>
-            <!-- PLACEHOLDER: Replace "Your Barber" with the barber's name -->
 
             <div class="barber-title-sub">
               <span class="gold-line"></span>
               Master Barber · Ghost Barbers
             </div>
 
+            <span class="haryana-badge">🇮🇳 From Haryana, India</span>
+
             <div class="barber-bio">
               <p>
-                Barbering isn't just a job — it's a trade that takes years to get right. Since picking up the clippers over five years ago, the craft has been a relentless pursuit: refining technique, studying cuts, and building a reputation one client at a time.
+                Born and raised in Haryana, India, the craft of barbering runs deep. After years of perfecting the trade back home — where grooming is a point of pride — Ghost Barbers was built to bring that same standard to every client.
               </p>
               <p>
-                Ghost Barbers started as a simple idea — what if you could get a genuinely great haircut in a calm, private space, without the noise and chaos of a commercial shop? The home studio was built with exactly that in mind: a clean, professional environment where the entire focus is on the client in the chair.
-              </p>
-              <p>
-                Every cut is approached with the same standard: understand what the client wants, be honest about what will work, and execute it properly. No shortcuts, no rushing, no cutting corners to squeeze in another booking.
-              </p>
-              <p>
-                Whether you're after a sharp skin fade, a textured crop, a classic taper, or a straight-razor beard sculpt — this is the place where it gets done right.
+                One chair, one barber, one focus: making sure you leave looking and feeling your best. No rush, no crowd — just clean work, every time.
               </p>
             </div>
 
@@ -332,11 +327,17 @@
     function swapLanguage() {
       const next = (localStorage.getItem('gb_lang') || 'en') === 'en' ? 'hi' : 'en';
       localStorage.setItem('gb_lang', next);
-      const toggle = document.getElementById('langToggle');
-      if (toggle) toggle.textContent = next === 'hi' ? 'हर | EN' : 'EN | हर';
+      applyLanguage(next);
     }
-    const _l = localStorage.getItem('gb_lang') || 'en';
-    if (document.getElementById('langToggle')) document.getElementById('langToggle').textContent = _l === 'hi' ? 'हर | EN' : 'EN | हर';
+    function applyLanguage(lang) {
+      document.querySelectorAll('[data-en]').forEach(el => {
+        const val = el.getAttribute(lang === 'hi' ? 'data-hi' : 'data-en');
+        if (val) el.innerHTML = val;
+      });
+      const toggle = document.getElementById('langToggle');
+      if (toggle) toggle.textContent = lang === 'hi' ? 'हरि | EN' : 'EN | हरि';
+    }
+    applyLanguage(localStorage.getItem('gb_lang') || 'en');
   </script>
 </body>
 </html>

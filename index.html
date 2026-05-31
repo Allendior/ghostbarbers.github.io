@@ -18,23 +18,26 @@
     <div class="nav-inner">
       <a href="index.html" class="nav-logo">Ghost<span>Barbers</span></a>
       <div class="nav-links">
-        <a href="index.html" class="nav-link-home active">Home</a>
-        <a href="about.html" class="nav-link-about">About</a>
-        <a href="booking.html" class="nav-link-booking">Book Now</a>
+        <a href="index.html" class="nav-link-home active" data-en="Home" data-hi="होम">Home</a>
+        <a href="about.html" class="nav-link-about" data-en="About" data-hi="बारे में">About</a>
+        <a href="booking.html" class="nav-link-booking" data-en="Book Now" data-hi="अभी बुक करो">Book Now</a>
       </div>
-      <button class="lang-toggle" id="langToggle" onclick="swapLanguage()" aria-label="Toggle language">EN | हर</button>
-      <a href="booking.html" class="nav-book">Book Now</a>
+      <button class="lang-toggle" id="langToggle" onclick="swapLanguage()" aria-label="Toggle language">EN | हरि</button>
+      <a href="booking.html" class="nav-book" data-en="Book Now" data-hi="बुक करो">Book Now</a>
       <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
         <span></span><span></span><span></span>
       </button>
     </div>
   </nav>
 
+  <!-- Haryanvi pride tagline (only visible in हरि mode) -->
+  <div class="lang-tagline" id="langTagline">हरियाणा की शान — Ghost Barbers</div>
+
   <!-- Mobile nav -->
   <div class="nav-mobile" id="mobileMenu">
-    <a href="index.html">Home</a>
-    <a href="about.html">About</a>
-    <a href="booking.html" class="nav-book">Book Appointment</a>
+    <a href="index.html" data-en="Home" data-hi="होम">Home</a>
+    <a href="about.html" data-en="About" data-hi="बारे में">About</a>
+    <a href="booking.html" class="nav-book" data-en="Book Appointment" data-hi="अभी बुक करो">Book Appointment</a>
   </div>
 
   <main>
@@ -52,24 +55,24 @@
         <div class="hero-text">
           <div class="hero-eyebrow">Private Studio &nbsp;·&nbsp; ghostbarbers.ca</div>
 
-          <h1 class="hero-title" data-en="The Cut Speaks for Itself." data-hi="Kaatna Bol Deta Hai Apni Baat.">
+          <h1 class="hero-title" data-en="The Cut<br><em>Speaks</em><br>for Itself." data-hi="कटिंग<br><em>बोल देती है</em><br>अपनी बात">
             The Cut<br>
             <em>Speaks</em><br>
             for Itself.
           </h1>
 
-          <p class="hero-desc" data-en="A private basement barbershop built on craft, not volume. One barber, one client at a time — no distractions, no waiting, no compromises." data-hi="Ek private basement barbershop, jahan kaam bolta hai. Ek barber, ek client — koi bheed nahi.">
+          <p class="hero-desc" data-en="A private basement barbershop built on craft, not volume. One barber, one client at a time — no distractions, no waiting, no compromises." data-hi="एक प्राइवेट बेसमेंट बार्बरशॉप — जहाँ हुनर की बात होती है, भीड़ की नहीं। एक बार्बर, एक ग्राहक — कोई झंझट नहीं, कोई इंतज़ार नहीं।">
             A private basement barbershop built on craft, not volume. One barber, one client at a time — no distractions, no waiting, no compromises.
           </p>
 
           <div class="hero-cta">
             <a href="booking.html" class="btn btn-gold">
-              <span data-en="Book an Appointment" data-hi="Appointment Book Karo">Book an Appointment</span>
+              <span data-en="Book an Appointment" data-hi="अपॉइंटमेंट बुक करो">Book an Appointment</span>
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                 <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </a>
-            <a href="about.html" class="btn btn-outline" data-en="Meet the Barber" data-hi="Barber Se Milo">Meet the Barber</a>
+            <a href="about.html" class="btn btn-outline" data-en="Meet the Barber" data-hi="बार्बर से मिलो">Meet the Barber</a>
           </div>
 
           <div class="hero-stats">
@@ -184,8 +187,8 @@
     <section class="services" id="services">
       <div class="container">
         <div class="services-header fade-in">
-          <span class="section-label">What We Offer</span>
-          <h2 class="section-title" data-en="Services &amp; Pricing" data-hi="Hamaari Sevaayein">Services &amp; Pricing</h2>
+          <span class="section-label" data-en="What We Offer" data-hi="क्या-क्या करां सां">What We Offer</span>
+          <h2 class="section-title" data-en="Services &amp; Pricing" data-hi="हमारी सेवाएँ">Services &amp; Pricing</h2>
           <div class="divider"></div>
           <p class="section-subtitle">Every service is done with care and attention to detail. No upsells, no rush — just a clean result.</p>
         </div>
@@ -541,20 +544,21 @@
 
     // Language toggle
     function swapLanguage() {
-      const current = localStorage.getItem('gb_lang') || 'en';
-      const next = current === 'en' ? 'hi' : 'en';
+      const next = (localStorage.getItem('gb_lang') || 'en') === 'en' ? 'hi' : 'en';
       localStorage.setItem('gb_lang', next);
       applyLanguage(next);
     }
     function applyLanguage(lang) {
       document.querySelectorAll('[data-en]').forEach(el => {
-        if (el.children.length === 0) {
-          el.textContent = lang === 'hi' ? el.getAttribute('data-hi') : el.getAttribute('data-en');
-        }
+        const val = el.getAttribute(lang === 'hi' ? 'data-hi' : 'data-en');
+        if (val) el.innerHTML = val;
       });
       const toggle = document.getElementById('langToggle');
-      if (toggle) toggle.textContent = lang === 'hi' ? 'हर | EN' : 'EN | हर';
+      if (toggle) toggle.textContent = lang === 'hi' ? 'हरि | EN' : 'EN | हरि';
+      const tagline = document.getElementById('langTagline');
+      if (tagline) tagline.style.display = lang === 'hi' ? 'block' : 'none';
     }
+    // Apply immediately — no flash
     applyLanguage(localStorage.getItem('gb_lang') || 'en');
   </script>
 </body>

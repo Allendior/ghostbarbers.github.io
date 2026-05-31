@@ -1382,6 +1382,40 @@ ul {
   line-height: 1.4;
 }
 
+/* Haryanvi pride tagline — shown only in हरि mode */
+.lang-tagline {
+  display: none;
+  text-align: center;
+  padding: 7px 16px;
+  background: rgba(201, 168, 76, 0.07);
+  border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+  font-size: 12px;
+  color: var(--gold);
+  letter-spacing: 0.06em;
+  position: fixed;
+  top: var(--nav-height);
+  left: 0;
+  right: 0;
+  z-index: 998;
+}
+
+/* Haryana origin badge on About page */
+.haryana-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--gold);
+  background: var(--gold-glow);
+  border: 1px solid var(--gold-dim);
+  border-radius: 20px;
+  padding: 5px 14px;
+  margin-bottom: 24px;
+  margin-top: -8px;
+}
+
 /* ============================================
    ABOUT PAGE
    ============================================ */

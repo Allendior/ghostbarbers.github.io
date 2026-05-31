@@ -32,12 +32,12 @@
     <div class="nav-inner">
       <a href="index.html" class="nav-logo">Ghost<span>Barbers</span></a>
       <div class="nav-links">
-        <a href="index.html" class="nav-link-home">Home</a>
-        <a href="about.html" class="nav-link-about">About</a>
-        <a href="booking.html" class="nav-link-booking active">Book Now</a>
+        <a href="index.html" class="nav-link-home" data-en="Home" data-hi="होम">Home</a>
+        <a href="about.html" class="nav-link-about" data-en="About" data-hi="बारे में">About</a>
+        <a href="booking.html" class="nav-link-booking active" data-en="Book Now" data-hi="अभी बुक करो">Book Now</a>
       </div>
-      <button class="lang-toggle" id="langToggle" onclick="swapLanguage()" aria-label="Toggle language">EN | हर</button>
-      <a href="booking.html" class="nav-book">Book Now</a>
+      <button class="lang-toggle" id="langToggle" onclick="swapLanguage()" aria-label="Toggle language">EN | हरि</button>
+      <a href="booking.html" class="nav-book" data-en="Book Now" data-hi="बुक करो">Book Now</a>
       <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
         <span></span><span></span><span></span>
       </button>
@@ -151,7 +151,7 @@
               <form id="bookingForm" novalidate>
                 <div class="form-row">
                   <div class="form-group">
-                    <label for="clientName" data-en="Full Name *" data-hi="Poora Naam *">Full Name *</label>
+                    <label for="clientName" data-en="Full Name *" data-hi="पूरा नाम *">Full Name *</label>
                     <input
                       type="text"
                       id="clientName"
@@ -162,7 +162,7 @@
                     />
                   </div>
                   <div class="form-group">
-                    <label for="clientPhone" data-en="Phone Number *" data-hi="Phone Number *">Phone Number *</label>
+                    <label for="clientPhone" data-en="Phone Number *" data-hi="फ़ोन नंबर *">Phone Number *</label>
                     <input
                       type="tel"
                       id="clientPhone"
@@ -175,7 +175,7 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="clientEmail" data-en="Email Address *" data-hi="Email *">Email Address *</label>
+                  <label for="clientEmail" data-en="Email Address *" data-hi="ईमेल *">Email Address *</label>
                   <input
                     type="email"
                     id="clientEmail"
@@ -187,7 +187,7 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="serviceSelect" data-en="Service *" data-hi="Seva Chunein *">Service *</label>
+                  <label for="serviceSelect" data-en="Service *" data-hi="सेवा चुनो *">Service *</label>
                   <select id="serviceSelect" name="service" required>
                     <option value="" disabled selected>Select a service…</option>
                     <option value="Curly Hair Treatment — $120">Curly Hair Treatment — $120</option>
@@ -210,7 +210,7 @@
 
                 <div class="form-row">
                   <div class="form-group">
-                    <label for="preferredDate" data-en="Preferred Date *" data-hi="Pasandida Tarikh *">Preferred Date *</label>
+                    <label for="preferredDate" data-en="Preferred Date *" data-hi="पसंदीदा तारीख *">Preferred Date *</label>
                     <input
                       type="date"
                       id="preferredDate"
@@ -219,7 +219,7 @@
                     />
                   </div>
                   <div class="form-group">
-                    <label for="preferredTime" data-en="Preferred Time *" data-hi="Pasandida Samay *">Preferred Time *</label>
+                    <label for="preferredTime" data-en="Preferred Time *" data-hi="पसंदीदा समय *">Preferred Time *</label>
                     <select id="preferredTime" name="preferred_time" required>
                       <option value="" disabled selected>Select a time…</option>
                       <option value="9:00 AM">9:00 AM</option>
@@ -257,7 +257,7 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="notes" data-en="Additional Notes" data-hi="Koi Baat">Additional Notes</label>
+                  <label for="notes" data-en="Additional Notes" data-hi="कोई बात">Additional Notes</label>
                   <textarea
                     id="notes"
                     name="notes"
@@ -267,7 +267,7 @@
                 </div>
 
                 <button type="submit" class="form-submit" id="submitBtn">
-                  <span class="btn-text" data-en="Request Appointment" data-hi="Appointment Book Karo">Request Appointment</span>
+                  <span class="btn-text" data-en="Request Appointment" data-hi="बुक करो">Request Appointment</span>
                   <span class="spinner"></span>
                 </button>
               </form>
@@ -611,16 +611,17 @@
     // LANGUAGE TOGGLE
     // =====================================================
     function swapLanguage() {
-      const current = localStorage.getItem('gb_lang') || 'en';
-      const next = current === 'en' ? 'hi' : 'en';
+      const next = (localStorage.getItem('gb_lang') || 'en') === 'en' ? 'hi' : 'en';
       localStorage.setItem('gb_lang', next);
       applyLanguage(next);
     }
     function applyLanguage(lang) {
       document.querySelectorAll('[data-en]').forEach(el => {
-        el.textContent = lang === 'hi' ? el.getAttribute('data-hi') : el.getAttribute('data-en');
+        const val = el.getAttribute(lang === 'hi' ? 'data-hi' : 'data-en');
+        if (val) el.innerHTML = val;
       });
-      document.getElementById('langToggle').textContent = lang === 'hi' ? 'हर | EN' : 'EN | हर';
+      const toggle = document.getElementById('langToggle');
+      if (toggle) toggle.textContent = lang === 'hi' ? 'हरि | EN' : 'EN | हरि';
     }
     applyLanguage(localStorage.getItem('gb_lang') || 'en');
   </script>
