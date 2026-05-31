@@ -19,6 +19,7 @@
         <a href="about.html" class="nav-link-about active">About</a>
         <a href="booking.html" class="nav-link-booking">Book Now</a>
       </div>
+      <button class="lang-toggle" id="langToggle" onclick="swapLanguage()" aria-label="Toggle language">EN | हर</button>
       <a href="booking.html" class="nav-book">Book Now</a>
       <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
         <span></span><span></span><span></span>
@@ -295,6 +296,7 @@
 
       <div class="footer-agency">
         Made by <a href="https://beavercomputing.com" target="_blank" rel="noopener">Beaver Computing</a> &mdash; Web Design &amp; Development
+        <a href="admin.html" class="admin-secret-link">·</a>
       </div>
     </div>
   </footer>
@@ -326,6 +328,15 @@
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    function swapLanguage() {
+      const next = (localStorage.getItem('gb_lang') || 'en') === 'en' ? 'hi' : 'en';
+      localStorage.setItem('gb_lang', next);
+      const toggle = document.getElementById('langToggle');
+      if (toggle) toggle.textContent = next === 'hi' ? 'हर | EN' : 'EN | हर';
+    }
+    const _l = localStorage.getItem('gb_lang') || 'en';
+    if (document.getElementById('langToggle')) document.getElementById('langToggle').textContent = _l === 'hi' ? 'हर | EN' : 'EN | हर';
   </script>
 </body>
 </html>

@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Ghost Barbers</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* ── Login overlay ── */
+    .admin-login {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .admin-login-card {
+      background: var(--card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 48px 44px;
+      max-width: 380px;
+      width: 100%;
+      text-align: center;
+    }
+    .admin-logo {
+      font-family: var(--font-heading);
+      font-size: 1.375rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      display: block;
+    }
+    .admin-logo span { color: var(--gold); }
+    .admin-login-sub {
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+    .admin-login-card .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    .admin-login-card .form-group label {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    .admin-login-card input[type="password"] {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      padding: 13px 16px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .admin-login-card input[type="password"]:focus {
+      border-color: var(--gold);
+    }
+    .admin-login-error {
+      color: #f87171;
+      font-size: 13px;
+      margin-bottom: 12px;
+      display: none;
+    }
+
+    /* ── Admin panel ── */
+    .admin-panel {
+      display: none;
+      min-height: 100vh;
+      padding: 0 0 80px;
+    }
+
+    .admin-topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 18px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .admin-topbar-logo {
+      font-family: var(--font-heading);
+      font-size: 1.125rem;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+    .admin-topbar-logo span { color: var(--gold); }
+    .admin-topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .admin-topbar-label {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .admin-logout-btn {
+      background: none;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      font-family: var(--font-body);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .admin-logout-btn:hover { color: var(--gold); border-color: var(--gold-dim); }
+
+    .admin-body {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 48px 24px 0;
+    }
+
+    .admin-section-title {
+      font-family: var(--font-heading);
+      font-size: 1.375rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: var(--text-primary);
+    }
+
+    /* Block form */
+    .admin-block-form {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px 36px;
+      margin-bottom: 48px;
+    }
+    .admin-block-form .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 16px;
+      align-items: end;
+    }
+    .admin-block-form label {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    .admin-block-form input[type="date"],
+    .admin-block-form select {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      padding: 11px 14px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.3s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .admin-block-form input:focus,
+    .admin-block-form select:focus { border-color: var(--gold); }
+    .admin-block-form select option { background: var(--card); }
+    .admin-block-btn {
+      background: var(--gold);
+      color: var(--black);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 11px 20px;
+      cursor: pointer;
+      transition: 0.3s;
+      white-space: nowrap;
+    }
+    .admin-block-btn:hover { background: var(--gold-light); }
+    .admin-block-note {
+      margin-top: 12px;
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+
+    /* Blocked list */
+    .admin-blocked-list {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .admin-blocked-header {
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--border);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .admin-blocked-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 28px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+    .admin-blocked-item:last-child { border-bottom: none; }
+    .admin-blocked-info { color: var(--text-primary); }
+    .admin-blocked-date {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .admin-unblock-btn {
+      background: none;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      font-family: var(--font-body);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      cursor: pointer;
+      transition: 0.3s;
+      flex-shrink: 0;
+    }
+    .admin-unblock-btn:hover { color: #f87171; border-color: rgba(248,113,113,0.4); }
+    .admin-empty {
+      padding: 40px 28px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+    .admin-clear-all {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 12px;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+    .admin-clear-all:hover { color: #f87171; }
+
+    @media (max-width: 600px) {
+      .admin-block-form .form-row { grid-template-columns: 1fr; }
+      .admin-topbar { padding: 16px 20px; }
+      .admin-body { padding: 32px 16px 0; }
+      .admin-block-form { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== LOGIN ===== -->
+  <div class="admin-login" id="adminLogin">
+    <div class="admin-login-card">
+      <span class="admin-logo">Ghost<span>Barbers</span></span>
+      <p class="admin-login-sub">Admin Panel</p>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="adminPassword" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()" />
+      </div>
+      <p class="admin-login-error" id="loginError">Incorrect password. Try again.</p>
+      <button class="btn btn-gold" onclick="doLogin()" style="width:100%;justify-content:center;">
+        Enter Admin Panel
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== ADMIN PANEL ===== -->
+  <div class="admin-panel" id="adminPanel">
+
+    <div class="admin-topbar">
+      <span class="admin-topbar-logo">Ghost<span>Barbers</span></span>
+      <div class="admin-topbar-right">
+        <span class="admin-topbar-label">Admin Panel</span>
+        <button class="admin-logout-btn" onclick="doLogout()">Log Out</button>
+      </div>
+    </div>
+
+    <div class="admin-body">
+
+      <!-- Block form -->
+      <h2 class="admin-section-title">Block a Date or Time Slot</h2>
+      <div class="admin-block-form">
+        <div class="form-row">
+          <div>
+            <label for="blockDate">Date</label>
+            <input type="date" id="blockDate" />
+          </div>
+          <div>
+            <label for="blockTime">Time Slot</label>
+            <select id="blockTime">
+              <option value="ALL">— Entire Day —</option>
+              <option value="9:00 AM">9:00 AM</option>
+              <option value="9:30 AM">9:30 AM</option>
+              <option value="10:00 AM">10:00 AM</option>
+              <option value="10:30 AM">10:30 AM</option>
+              <option value="11:00 AM">11:00 AM</option>
+              <option value="11:30 AM">11:30 AM</option>
+              <option value="12:00 PM">12:00 PM</option>
+              <option value="12:30 PM">12:30 PM</option>
+              <option value="1:00 PM">1:00 PM</option>
+              <option value="1:30 PM">1:30 PM</option>
+              <option value="2:00 PM">2:00 PM</option>
+              <option value="2:30 PM">2:30 PM</option>
+              <option value="3:00 PM">3:00 PM</option>
+              <option value="3:30 PM">3:30 PM</option>
+              <option value="4:00 PM">4:00 PM</option>
+              <option value="4:30 PM">4:30 PM</option>
+              <option value="5:00 PM">5:00 PM</option>
+              <option value="5:30 PM">5:30 PM</option>
+              <option value="6:00 PM">6:00 PM</option>
+              <option value="6:30 PM">6:30 PM</option>
+              <option value="7:00 PM">7:00 PM</option>
+              <option value="7:30 PM">7:30 PM</option>
+              <option value="8:00 PM">8:00 PM</option>
+              <option value="8:30 PM">8:30 PM</option>
+              <option value="9:00 PM">9:00 PM</option>
+              <option value="9:30 PM">9:30 PM</option>
+              <option value="10:00 PM">10:00 PM</option>
+              <option value="10:30 PM">10:30 PM</option>
+              <option value="11:00 PM">11:00 PM</option>
+            </select>
+          </div>
+          <button class="admin-block-btn" onclick="blockSlot()">Block</button>
+        </div>
+        <p class="admin-block-note">Select "Entire Day" to block all slots for that date. Blocked times will show as unavailable on the booking page.</p>
+      </div>
+
+      <!-- Blocked list -->
+      <h2 class="admin-section-title">Currently Blocked</h2>
+      <div class="admin-blocked-list" id="blockedList">
+        <div class="admin-empty" id="emptyMsg">No blocked dates or times yet.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const ADMIN_PASSWORD = 'GhostAdmin2025';
+    const BLOCKED_KEY    = 'ghostbarbers_blocked';
+
+    // ── Auth ──
+    function doLogin() {
+      const pw = document.getElementById('adminPassword').value;
+      if (pw === ADMIN_PASSWORD) {
+        document.getElementById('adminLogin').style.display = 'none';
+        document.getElementById('adminPanel').style.display = 'block';
+        renderBlockedList();
+        // Set today as default
+        document.getElementById('blockDate').value = new Date().toISOString().split('T')[0];
+      } else {
+        document.getElementById('loginError').style.display = 'block';
+        document.getElementById('adminPassword').value = '';
+      }
+    }
+
+    function doLogout() {
+      document.getElementById('adminLogin').style.display = 'flex';
+      document.getElementById('adminPanel').style.display = 'none';
+      document.getElementById('adminPassword').value = '';
+    }
+
+    // ── Block / Unblock ──
+    function getBlocked() {
+      return JSON.parse(localStorage.getItem(BLOCKED_KEY) || '{}');
+    }
+
+    function saveBlocked(obj) {
+      localStorage.setItem(BLOCKED_KEY, JSON.stringify(obj));
+    }
+
+    function blockSlot() {
+      const date = document.getElementById('blockDate').value;
+      const time = document.getElementById('blockTime').value;
+      if (!date) { alert('Please select a date.'); return; }
+      const key = date + '|' + time;
+      const blocked = getBlocked();
+      blocked[key] = true;
+      saveBlocked(blocked);
+      renderBlockedList();
+    }
+
+    function unblockSlot(key) {
+      const blocked = getBlocked();
+      delete blocked[key];
+      saveBlocked(blocked);
+      renderBlockedList();
+    }
+
+    function clearAll() {
+      if (confirm('Remove all blocked dates and times?')) {
+        saveBlocked({});
+        renderBlockedList();
+      }
+    }
+
+    function renderBlockedList() {
+      const blocked = getBlocked();
+      const keys = Object.keys(blocked).sort();
+      const list = document.getElementById('blockedList');
+      const empty = document.getElementById('emptyMsg');
+
+      // Remove old items (keep header if present)
+      list.innerHTML = '';
+
+      if (keys.length === 0) {
+        list.innerHTML = '<div class="admin-empty">No blocked dates or times yet.</div>';
+        return;
+      }
+
+      const header = document.createElement('div');
+      header.className = 'admin-blocked-header';
+      header.innerHTML = `<span>${keys.length} blocked slot${keys.length !== 1 ? 's' : ''}</span>
+        <button class="admin-clear-all" onclick="clearAll()">Clear all</button>`;
+      list.appendChild(header);
+
+      keys.forEach(key => {
+        const [date, time] = key.split('|');
+        const label = time === 'ALL' ? 'Entire day blocked' : time;
+        const dateDisplay = new Date(date + 'T00:00:00').toLocaleDateString('en-CA', {
+          weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
+        });
+        const item = document.createElement('div');
+        item.className = 'admin-blocked-item';
+        item.innerHTML = `
+          <div>
+            <div class="admin-blocked-info">${label}</div>
+            <div class="admin-blocked-date">${dateDisplay}</div>
+          </div>
+          <button class="admin-unblock-btn" onclick="unblockSlot('${key}')">Unblock</button>`;
+        list.appendChild(item);
+      });
+    }
+  </script>
+</body>
+</html>

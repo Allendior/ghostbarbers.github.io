@@ -22,6 +22,7 @@
         <a href="about.html" class="nav-link-about">About</a>
         <a href="booking.html" class="nav-link-booking">Book Now</a>
       </div>
+      <button class="lang-toggle" id="langToggle" onclick="swapLanguage()" aria-label="Toggle language">EN | हर</button>
       <a href="booking.html" class="nav-book">Book Now</a>
       <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
         <span></span><span></span><span></span>
@@ -51,24 +52,24 @@
         <div class="hero-text">
           <div class="hero-eyebrow">Private Studio &nbsp;·&nbsp; ghostbarbers.ca</div>
 
-          <h1 class="hero-title">
+          <h1 class="hero-title" data-en="The Cut Speaks for Itself." data-hi="Kaatna Bol Deta Hai Apni Baat.">
             The Cut<br>
             <em>Speaks</em><br>
             for Itself.
           </h1>
 
-          <p class="hero-desc">
+          <p class="hero-desc" data-en="A private basement barbershop built on craft, not volume. One barber, one client at a time — no distractions, no waiting, no compromises." data-hi="Ek private basement barbershop, jahan kaam bolta hai. Ek barber, ek client — koi bheed nahi.">
             A private basement barbershop built on craft, not volume. One barber, one client at a time — no distractions, no waiting, no compromises.
           </p>
 
           <div class="hero-cta">
             <a href="booking.html" class="btn btn-gold">
-              Book an Appointment
+              <span data-en="Book an Appointment" data-hi="Appointment Book Karo">Book an Appointment</span>
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                 <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </a>
-            <a href="about.html" class="btn btn-outline">Meet the Barber</a>
+            <a href="about.html" class="btn btn-outline" data-en="Meet the Barber" data-hi="Barber Se Milo">Meet the Barber</a>
           </div>
 
           <div class="hero-stats">
@@ -184,7 +185,7 @@
       <div class="container">
         <div class="services-header fade-in">
           <span class="section-label">What We Offer</span>
-          <h2 class="section-title">Services & Pricing</h2>
+          <h2 class="section-title" data-en="Services &amp; Pricing" data-hi="Hamaari Sevaayein">Services &amp; Pricing</h2>
           <div class="divider"></div>
           <p class="section-subtitle">Every service is done with care and attention to detail. No upsells, no rush — just a clean result.</p>
         </div>
@@ -499,6 +500,7 @@
 
       <div class="footer-agency">
         Made by <a href="https://beavercomputing.com" target="_blank" rel="noopener">Beaver Computing</a> &mdash; Web Design &amp; Development
+        <a href="admin.html" class="admin-secret-link">·</a>
       </div>
     </div>
   </footer>
@@ -536,6 +538,24 @@
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Language toggle
+    function swapLanguage() {
+      const current = localStorage.getItem('gb_lang') || 'en';
+      const next = current === 'en' ? 'hi' : 'en';
+      localStorage.setItem('gb_lang', next);
+      applyLanguage(next);
+    }
+    function applyLanguage(lang) {
+      document.querySelectorAll('[data-en]').forEach(el => {
+        if (el.children.length === 0) {
+          el.textContent = lang === 'hi' ? el.getAttribute('data-hi') : el.getAttribute('data-en');
+        }
+      });
+      const toggle = document.getElementById('langToggle');
+      if (toggle) toggle.textContent = lang === 'hi' ? 'हर | EN' : 'EN | हर';
+    }
+    applyLanguage(localStorage.getItem('gb_lang') || 'en');
   </script>
 </body>
 </html>

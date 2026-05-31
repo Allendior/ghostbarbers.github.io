@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Appointment Status — Ghost Barbers</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .confirm-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      text-align: center;
+    }
+    .confirm-logo {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      text-decoration: none;
+      margin-bottom: 48px;
+      display: block;
+    }
+    .confirm-logo span { color: var(--gold); }
+    .confirm-card {
+      background: var(--card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 48px 44px;
+      max-width: 520px;
+      width: 100%;
+    }
+    .confirm-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 28px;
+      font-weight: 300;
+    }
+    .confirm-icon.success {
+      background: rgba(74, 222, 128, 0.1);
+      border: 1.5px solid rgba(74, 222, 128, 0.5);
+      color: #4ade80;
+    }
+    .confirm-icon.reject {
+      background: rgba(248, 113, 113, 0.1);
+      border: 1.5px solid rgba(248, 113, 113, 0.4);
+      color: #f87171;
+    }
+    .confirm-title {
+      font-family: var(--font-heading);
+      font-size: 1.875rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+    .confirm-title.success { color: #4ade80; }
+    .confirm-title.reject  { color: #f87171; }
+    .confirm-msg {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+    .confirm-details {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 28px;
+      text-align: left;
+    }
+    .confirm-detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 11px 18px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13.5px;
+    }
+    .confirm-detail-row:last-child { border-bottom: none; }
+    .confirm-detail-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .confirm-detail-value {
+      color: var(--text-primary);
+      font-weight: 400;
+      text-align: right;
+    }
+    .confirm-status-note {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+    @media (max-width: 480px) {
+      .confirm-card { padding: 32px 20px; }
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body class="page-booking">
+
+  <div class="confirm-page">
+    <a href="index.html" class="confirm-logo">Ghost<span>Barbers</span></a>
+
+    <div class="confirm-card" id="confirmCard">
+      <div class="confirm-icon" id="confirmIcon"></div>
+      <h1 class="confirm-title" id="confirmTitle"></h1>
+      <p class="confirm-msg" id="confirmMsg"></p>
+      <div class="confirm-details" id="confirmDetails"></div>
+      <p class="confirm-status-note" id="confirmNote"></p>
+      <a href="index.html" class="btn btn-outline" style="display:inline-flex;">Back to Website</a>
+    </div>
+  </div>
+
+  <script>
+    // =====================================================
+    // USE THE SAME KEYS AS booking.html
+    // =====================================================
+    const EMAILJS_PUBLIC_KEY          = 'YOUR_PUBLIC_KEY';
+    const EMAILJS_SERVICE_ID          = 'YOUR_SERVICE_ID';
+    const EMAILJS_CONFIRMED_TEMPLATE_ID = 'YOUR_CONFIRMED_CUSTOMER_TEMPLATE_ID';
+    const EMAILJS_REJECTED_TEMPLATE_ID  = 'YOUR_REJECTED_CUSTOMER_TEMPLATE_ID';
+    // =====================================================
+
+    emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+
+    const params  = new URLSearchParams(window.location.search);
+    const action  = params.get('action');
+    const name    = params.get('name')    || 'Client';
+    const email   = params.get('email')   || '';
+    const service = params.get('service') || '';
+    const date    = params.get('date')    || '';
+    const time    = params.get('time')    || '';
+
+    const icon    = document.getElementById('confirmIcon');
+    const title   = document.getElementById('confirmTitle');
+    const msg     = document.getElementById('confirmMsg');
+    const details = document.getElementById('confirmDetails');
+    const note    = document.getElementById('confirmNote');
+
+    function buildDetails() {
+      return `
+        <div class="confirm-detail-row">
+          <span class="confirm-detail-label">Name</span>
+          <span class="confirm-detail-value">${name}</span>
+        </div>
+        <div class="confirm-detail-row">
+          <span class="confirm-detail-label">Service</span>
+          <span class="confirm-detail-value">${service}</span>
+        </div>
+        <div class="confirm-detail-row">
+          <span class="confirm-detail-label">Date</span>
+          <span class="confirm-detail-value">${date}</span>
+        </div>
+        <div class="confirm-detail-row">
+          <span class="confirm-detail-label">Time</span>
+          <span class="confirm-detail-value">${time}</span>
+        </div>`;
+    }
+
+    if (action === 'confirm') {
+      icon.className  = 'confirm-icon success';
+      icon.textContent = '✓';
+      title.className = 'confirm-title success';
+      title.textContent = 'Appointment Confirmed!';
+      msg.textContent  = `Hi ${name}, your appointment has been confirmed. We look forward to seeing you!`;
+      details.innerHTML = buildDetails();
+      note.textContent  = 'A confirmation email has been sent to the client.';
+
+      if (email) {
+        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_CONFIRMED_TEMPLATE_ID, {
+          to_name:  name,
+          to_email: email,
+          service,
+          appt_date: date,
+          appt_time: time
+        }).catch(err => console.warn('Confirmed email failed:', err));
+      }
+
+    } else if (action === 'reject') {
+      icon.className   = 'confirm-icon reject';
+      icon.textContent = '✕';
+      title.className  = 'confirm-title reject';
+      title.textContent = 'Appointment Unavailable';
+      msg.textContent   = `Hi ${name}, this slot is unavailable. A notification has been sent to the client asking them to rebook.`;
+      details.innerHTML = buildDetails();
+      note.textContent  = 'The client has been notified and directed to rebook.';
+
+      if (email) {
+        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_REJECTED_TEMPLATE_ID, {
+          to_name:   name,
+          to_email:  email,
+          service,
+          appt_date: date,
+          appt_time: time,
+          booking_url: 'https://ghostbarbers.ca/booking.html'
+        }).catch(err => console.warn('Rejected email failed:', err));
+      }
+
+    } else {
+      title.textContent = 'Invalid Link';
+      msg.textContent   = 'This link is not valid. Please go back to the website.';
+      details.style.display = 'none';
+    }
+  </script>
+</body>
+</html>

@@ -36,6 +36,7 @@
         <a href="about.html" class="nav-link-about">About</a>
         <a href="booking.html" class="nav-link-booking active">Book Now</a>
       </div>
+      <button class="lang-toggle" id="langToggle" onclick="swapLanguage()" aria-label="Toggle language">EN | हर</button>
       <a href="booking.html" class="nav-book">Book Now</a>
       <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
         <span></span><span></span><span></span>
@@ -150,7 +151,7 @@
               <form id="bookingForm" novalidate>
                 <div class="form-row">
                   <div class="form-group">
-                    <label for="clientName">Full Name *</label>
+                    <label for="clientName" data-en="Full Name *" data-hi="Poora Naam *">Full Name *</label>
                     <input
                       type="text"
                       id="clientName"
@@ -161,7 +162,7 @@
                     />
                   </div>
                   <div class="form-group">
-                    <label for="clientPhone">Phone Number *</label>
+                    <label for="clientPhone" data-en="Phone Number *" data-hi="Phone Number *">Phone Number *</label>
                     <input
                       type="tel"
                       id="clientPhone"
@@ -174,7 +175,7 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="clientEmail">Email Address *</label>
+                  <label for="clientEmail" data-en="Email Address *" data-hi="Email *">Email Address *</label>
                   <input
                     type="email"
                     id="clientEmail"
@@ -186,7 +187,7 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="serviceSelect">Service *</label>
+                  <label for="serviceSelect" data-en="Service *" data-hi="Seva Chunein *">Service *</label>
                   <select id="serviceSelect" name="service" required>
                     <option value="" disabled selected>Select a service…</option>
                     <option value="Curly Hair Treatment — $120">Curly Hair Treatment — $120</option>
@@ -209,7 +210,7 @@
 
                 <div class="form-row">
                   <div class="form-group">
-                    <label for="preferredDate">Preferred Date *</label>
+                    <label for="preferredDate" data-en="Preferred Date *" data-hi="Pasandida Tarikh *">Preferred Date *</label>
                     <input
                       type="date"
                       id="preferredDate"
@@ -218,10 +219,9 @@
                     />
                   </div>
                   <div class="form-group">
-                    <label for="preferredTime">Preferred Time *</label>
+                    <label for="preferredTime" data-en="Preferred Time *" data-hi="Pasandida Samay *">Preferred Time *</label>
                     <select id="preferredTime" name="preferred_time" required>
                       <option value="" disabled selected>Select a time…</option>
-                      <!-- 9am – 6pm in 30-min slots -->
                       <option value="9:00 AM">9:00 AM</option>
                       <option value="9:30 AM">9:30 AM</option>
                       <option value="10:00 AM">10:00 AM</option>
@@ -241,12 +241,23 @@
                       <option value="5:00 PM">5:00 PM</option>
                       <option value="5:30 PM">5:30 PM</option>
                       <option value="6:00 PM">6:00 PM</option>
+                      <option value="6:30 PM">6:30 PM</option>
+                      <option value="7:00 PM">7:00 PM</option>
+                      <option value="7:30 PM">7:30 PM</option>
+                      <option value="8:00 PM">8:00 PM</option>
+                      <option value="8:30 PM">8:30 PM</option>
+                      <option value="9:00 PM">9:00 PM</option>
+                      <option value="9:30 PM">9:30 PM</option>
+                      <option value="10:00 PM">10:00 PM</option>
+                      <option value="10:30 PM">10:30 PM</option>
+                      <option value="11:00 PM">11:00 PM</option>
                     </select>
+                    <p class="time-availability-note">Available 7 days a week &middot; 9AM–11PM &middot; Subject to confirmation</p>
                   </div>
                 </div>
 
                 <div class="form-group">
-                  <label for="notes">Additional Notes</label>
+                  <label for="notes" data-en="Additional Notes" data-hi="Koi Baat">Additional Notes</label>
                   <textarea
                     id="notes"
                     name="notes"
@@ -256,7 +267,7 @@
                 </div>
 
                 <button type="submit" class="form-submit" id="submitBtn">
-                  <span class="btn-text">Request Appointment</span>
+                  <span class="btn-text" data-en="Request Appointment" data-hi="Appointment Book Karo">Request Appointment</span>
                   <span class="spinner"></span>
                 </button>
               </form>
@@ -371,6 +382,7 @@
 
       <div class="footer-agency">
         Made by <a href="https://beavercomputing.com" target="_blank" rel="noopener">Beaver Computing</a> &mdash; Web Design &amp; Development
+        <a href="admin.html" class="admin-secret-link">·</a>
       </div>
     </div>
   </footer>
@@ -379,15 +391,36 @@
     // =====================================================
     // EMAILJS CONFIGURATION — FILL THESE IN
     // =====================================================
-    // Replace each string below with your real values from emailjs.com
-    const EMAILJS_PUBLIC_KEY          = 'YOUR_PUBLIC_KEY';          // Account > API Keys
-    const EMAILJS_SERVICE_ID          = 'YOUR_SERVICE_ID';          // Email Services tab
-    const EMAILJS_CONFIRM_TEMPLATE_ID = 'YOUR_CONFIRMATION_TEMPLATE_ID'; // Email Templates tab
-    const EMAILJS_REMINDER_TEMPLATE_ID= 'YOUR_REMINDER_TEMPLATE_ID';    // Email Templates tab
+    const EMAILJS_PUBLIC_KEY           = 'YOUR_PUBLIC_KEY';
+    const EMAILJS_SERVICE_ID           = 'YOUR_SERVICE_ID';
+    const EMAILJS_CONFIRM_TEMPLATE_ID  = 'YOUR_CONFIRMATION_TEMPLATE_ID';
+    const EMAILJS_REMINDER_TEMPLATE_ID = 'YOUR_REMINDER_TEMPLATE_ID';
+    const EMAILJS_BARBER_TEMPLATE_ID   = 'YOUR_BARBER_NOTIFICATION_TEMPLATE_ID';
     // =====================================================
 
     // Initialize EmailJS
     emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+
+    // =====================================================
+    // BLOCKED SLOTS — check after date is picked
+    // =====================================================
+    document.getElementById('preferredDate').addEventListener('change', function() {
+      const picked = this.value;
+      const blocked = JSON.parse(localStorage.getItem('ghostbarbers_blocked') || '{}');
+      const timeSelect = document.getElementById('preferredTime');
+      Array.from(timeSelect.options).forEach(opt => {
+        if (!opt.value) return;
+        const key = picked + '|' + opt.value;
+        const dayBlocked = blocked[picked + '|ALL'];
+        if (dayBlocked || blocked[key]) {
+          opt.disabled = true;
+          opt.textContent = opt.value + ' — Unavailable';
+        } else {
+          opt.disabled = false;
+          opt.textContent = opt.value;
+        }
+      });
+    });
 
     // --- Set minimum date to today ---
     const dateInput = document.getElementById('preferredDate');
@@ -517,24 +550,43 @@
       };
 
       try {
-        // Send the confirmation email
-        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_CONFIRM_TEMPLATE_ID, confirmParams);
+        const cleanService = service.replace(/ — \$\d+/, '');
 
-        // Store booking info in localStorage for the 30-day reminder
-        const bookings = JSON.parse(localStorage.getItem('ghostbarbers_bookings') || '[]');
-        bookings.push({
-          name:          name,
-          email:         email,
-          service:       service,
-          date:          date,
-          timestamp:     Date.now(),
-          reminderSent:  false
+        // Build confirm/reject URLs for the barber
+        const params = new URLSearchParams({ name, email, service: cleanService, date: formattedDate, time });
+        const confirmUrl = `https://ghostbarbers.ca/confirm.html?action=confirm&${params}`;
+        const rejectUrl  = `https://ghostbarbers.ca/confirm.html?action=reject&${params}`;
+
+        // 1. Send customer "received" email
+        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_CONFIRM_TEMPLATE_ID, {
+          to_name: name, to_email: email,
+          client_phone: phone, service: cleanService,
+          appt_date: formattedDate, appt_time: time,
+          notes: notes || 'None', reply_to: email
         });
+
+        // 2. Send barber notification email
+        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_BARBER_TEMPLATE_ID, {
+          to_email:     'punitp2754@gmail.com',
+          client_name:  name,
+          client_phone: phone,
+          client_email: email,
+          service:      cleanService,
+          appt_date:    formattedDate,
+          appt_time:    time,
+          notes:        notes || 'None',
+          confirm_url:  confirmUrl,
+          reject_url:   rejectUrl
+        }).catch(err => console.warn('Barber notification failed:', err));
+
+        // Store booking for 30-day reminder
+        const bookings = JSON.parse(localStorage.getItem('ghostbarbers_bookings') || '[]');
+        bookings.push({ name, email, service, date, timestamp: Date.now(), reminderSent: false });
         localStorage.setItem('ghostbarbers_bookings', JSON.stringify(bookings));
 
         // Populate summary card fields
         document.getElementById('confName').textContent    = name;
-        document.getElementById('confService').textContent = service.replace(/ — \$\d+/, '');
+        document.getElementById('confService').textContent = cleanService;
         document.getElementById('confDate').textContent    = formattedDate;
         document.getElementById('confTime').textContent    = time;
         document.getElementById('confEmail').textContent   = email;
@@ -554,6 +606,23 @@
         );
       }
     });
+
+    // =====================================================
+    // LANGUAGE TOGGLE
+    // =====================================================
+    function swapLanguage() {
+      const current = localStorage.getItem('gb_lang') || 'en';
+      const next = current === 'en' ? 'hi' : 'en';
+      localStorage.setItem('gb_lang', next);
+      applyLanguage(next);
+    }
+    function applyLanguage(lang) {
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = lang === 'hi' ? el.getAttribute('data-hi') : el.getAttribute('data-en');
+      });
+      document.getElementById('langToggle').textContent = lang === 'hi' ? 'हर | EN' : 'EN | हर';
+    }
+    applyLanguage(localStorage.getItem('gb_lang') || 'en');
   </script>
 </body>
 </html>
