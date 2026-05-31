@@ -600,33 +600,16 @@ ul {
   aspect-ratio: 4/5;
   border-radius: var(--radius-md);
   overflow: hidden;
-  background: var(--card);
-  border: 1px solid var(--border);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  box-shadow: 0 0 0 1px rgba(201, 168, 76, 0.08), 0 32px 80px rgba(0,0,0,0.6);
 }
 
-.hero-image-placeholder {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  background:
-    linear-gradient(135deg, #0f0f0f 0%, #141210 50%, #0f0d0b 100%);
-}
-
-.hero-image-placeholder .scissors-icon {
-  width: 48px;
-  height: 48px;
-  opacity: 0.2;
-}
-
-.hero-image-placeholder span {
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-muted);
+.hero-image-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
 }
 
 /* Decorative frame elements */
@@ -1412,20 +1395,19 @@ ul {
 
 .barber-profile-inner {
   display: grid;
-  grid-template-columns: 1fr 1.2fr;
-  gap: 80px;
+  grid-template-columns: 2fr 3fr;
+  gap: 64px;
   align-items: start;
 }
 
 /* Staggered two-photo barber layout */
 .barber-photos {
   position: relative;
-  padding-bottom: 72px;
-  padding-right: 40px;
+  padding-bottom: 90px;
 }
 
 .barber-photo-main {
-  width: 88%;
+  width: 100%;
   border-radius: var(--radius-md);
   overflow: hidden;
   border: 1px solid var(--border-light);
@@ -1443,12 +1425,12 @@ ul {
 .barber-photo-secondary {
   position: absolute;
   bottom: 0;
-  right: 0;
-  width: 56%;
+  right: 12px;
+  width: 52%;
   border-radius: var(--radius-md);
   overflow: hidden;
-  border: 3px solid var(--bg);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,168,76,0.15);
+  border: 4px solid var(--bg);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,168,76,0.18);
 }
 
 .barber-photo-secondary img {
@@ -2047,7 +2029,7 @@ body.page-booking  .nav-link-booking::after {
   }
 
   .hero-visual {
-    max-width: 400px;
+    max-width: 420px;
     margin: 0 auto;
   }
 
@@ -2090,7 +2072,8 @@ body.page-booking  .nav-link-booking::after {
   }
 
   .barber-photos {
-    max-width: 400px;
+    max-width: 480px;
+    margin: 0 auto;
   }
 
   .why-choose-inner {
@@ -2231,6 +2214,10 @@ body.page-booking  .nav-link-booking::after {
   }
 
   /* Hero */
+  .hero-visual {
+    display: none;
+  }
+
   .hero-title {
     font-size: 2.1rem;
     letter-spacing: -0.025em;
@@ -2360,7 +2347,8 @@ body.page-booking  .nav-link-booking::after {
 
   .barber-photos {
     padding-bottom: 0;
-    padding-right: 0;
+    max-width: 100%;
+    margin: 0;
   }
 
   .barber-photo-main {
@@ -2368,15 +2356,7 @@ body.page-booking  .nav-link-booking::after {
   }
 
   .barber-photo-secondary {
-    position: static;
-    width: 100%;
-    margin-top: 16px;
-    border: none;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-  }
-
-  .barber-photo-secondary img {
-    aspect-ratio: 4/3;
+    display: none;
   }
 
   .why-item {
