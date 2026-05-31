@@ -976,83 +976,54 @@ ul {
 
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: 280px 280px;
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
 
 .gallery-item {
-  background: var(--card);
-  border: 1px solid var(--border);
   border-radius: var(--radius-md);
   overflow: hidden;
   position: relative;
   cursor: pointer;
+  height: 300px;
+  background: var(--card);
 }
 
-.gallery-item:nth-child(1) {
-  grid-column: span 2;
-  grid-row: span 2;
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.gallery-item:nth-child(4) {
-  grid-column: span 2;
-}
-
-.gallery-item-inner {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  transition: var(--transition);
-}
-
-.gallery-item-inner .ph-icon {
-  width: 28px;
-  height: 28px;
-  opacity: 0.1;
-  transition: opacity var(--transition);
-}
-
-.gallery-item-inner .ph-label {
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  opacity: 0.6;
-}
-
-.gallery-item:hover .gallery-item-inner {
-  background: rgba(201, 168, 76, 0.04);
-}
-
-.gallery-item:hover .ph-icon {
-  opacity: 0.2;
+.gallery-item:hover img {
+  transform: scale(1.05);
 }
 
 .gallery-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%);
+  background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 55%);
   opacity: 0;
   transition: opacity var(--transition);
   display: flex;
   align-items: flex-end;
-  padding: 24px;
+  padding: 18px 20px;
+  pointer-events: none;
 }
 
 .gallery-item:hover .gallery-overlay {
   opacity: 1;
 }
 
-.gallery-overlay span {
-  font-size: 12px;
-  letter-spacing: 0.1em;
+.gallery-watermark {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--text-secondary);
+  color: rgba(201, 168, 76, 0.75);
 }
 
 .gallery-cta {
@@ -1453,28 +1424,19 @@ ul {
 .barber-image-box {
   aspect-ratio: 3/4;
   background: var(--card);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-light);
   border-radius: var(--radius-md);
   overflow: hidden;
   position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,76,0.08);
 }
 
-.barber-image-placeholder {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  background: linear-gradient(160deg, #111 0%, #0e0c0a 100%);
-}
-
-.barber-image-placeholder span {
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-muted);
+.barber-image-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
 }
 
 .barber-accent-frame {
@@ -2074,21 +2036,10 @@ body.page-booking  .nav-link-booking::after {
 
   .gallery-grid {
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: auto;
-  }
-
-  .gallery-item:nth-child(1) {
-    grid-column: span 2;
-    grid-row: span 1;
-    aspect-ratio: 16/7;
   }
 
   .gallery-item {
-    aspect-ratio: 1;
-  }
-
-  .gallery-item:nth-child(4) {
-    grid-column: span 1;
+    height: 240px;
   }
 
   .testimonials-grid {
@@ -2174,8 +2125,8 @@ body.page-booking  .nav-link-booking::after {
     grid-template-rows: auto;
   }
 
-  .gallery-item:nth-child(1) {
-    aspect-ratio: 4/3;
+  .gallery-item {
+    height: 220px;
   }
 
   .testimonials-grid {
@@ -2330,10 +2281,8 @@ body.page-booking  .nav-link-booking::after {
     grid-template-columns: 1fr;
   }
 
-  .gallery-item:nth-child(1),
-  .gallery-item:nth-child(4) {
-    grid-column: span 1;
-    aspect-ratio: 4/3;
+  .gallery-item {
+    height: 260px;
   }
 
   /* Testimonials */
