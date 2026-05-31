@@ -239,12 +239,35 @@
 
             <!-- Confirmation message (shown after submit) -->
             <div class="booking-confirmation" id="bookingConfirmation">
-              <div class="confirmation-icon">✓</div>
-              <h2 class="confirmation-title">You're Booked In!</h2>
-              <p class="confirmation-body" id="confirmationBody">
-                Thanks — your request has been received. Check your email for a confirmation. The barber will be in touch shortly to lock in your time.
+              <div class="confirmation-check">✓</div>
+              <h2 class="confirmation-title">You're All Set!</h2>
+              <p class="confirmation-msg">
+                Thanks for booking with Ghost Barbers. We'll be in touch shortly to confirm your appointment.
               </p>
-              <a href="index.html" class="btn btn-outline">Back to Home</a>
+
+              <div class="confirmation-summary">
+                <div class="confirmation-row">
+                  <span class="conf-label">Name</span>
+                  <span class="conf-value" id="confName">—</span>
+                </div>
+                <div class="confirmation-row">
+                  <span class="conf-label">Service</span>
+                  <span class="conf-value" id="confService">—</span>
+                </div>
+                <div class="confirmation-row">
+                  <span class="conf-label">Date</span>
+                  <span class="conf-value" id="confDate">—</span>
+                </div>
+                <div class="confirmation-row">
+                  <span class="conf-label">Time</span>
+                  <span class="conf-value" id="confTime">—</span>
+                </div>
+              </div>
+
+              <p class="confirmation-note">
+                A confirmation email has been sent to <strong id="confEmail">your inbox</strong>.
+              </p>
+              <a href="index.html" class="btn btn-outline" style="display:inline-flex;">Back to Home</a>
             </div>
 
           </div>
@@ -402,7 +425,6 @@
     const submitBtn = document.getElementById('submitBtn');
     const formContainer = document.getElementById('formContainer');
     const confirmationEl = document.getElementById('bookingConfirmation');
-    const confirmationBody = document.getElementById('confirmationBody');
 
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
@@ -464,12 +486,16 @@
         });
         localStorage.setItem('ghostbarbers_bookings', JSON.stringify(bookings));
 
+        // Populate summary card fields
+        document.getElementById('confName').textContent    = name;
+        document.getElementById('confService').textContent = service.replace(/ — \$\d+/, '');
+        document.getElementById('confDate').textContent    = formattedDate;
+        document.getElementById('confTime').textContent    = time;
+        document.getElementById('confEmail').textContent   = email;
+
         // Show success state
         formContainer.style.display = 'none';
         confirmationEl.classList.add('visible');
-        confirmationBody.textContent =
-          `Thanks, ${name}! Your request for a ${service} on ${formattedDate} at ${time} has been received. ` +
-          `Check your email (${email}) for a confirmation. The barber will be in touch shortly.`;
 
       } catch (err) {
         console.error('EmailJS error:', err);
