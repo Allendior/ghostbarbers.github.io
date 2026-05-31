@@ -654,50 +654,11 @@ ul {
   opacity: 0.5;
 }
 
-.hero-badge {
-  position: absolute;
-  bottom: 32px;
-  left: -24px;
-  background: var(--card);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-md);
-  padding: 16px 20px;
-  backdrop-filter: blur(10px);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 180px;
-}
-
-.hero-badge-dot {
-  width: 8px;
-  height: 8px;
-  background: #4ade80;
-  border-radius: 50%;
+.hero-stat-divider {
+  width: 1px;
+  height: 32px;
+  background: var(--border-light);
   flex-shrink: 0;
-  box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.2);
-  animation: pulse-dot 2s ease-in-out infinite;
-}
-
-@keyframes pulse-dot {
-  0%, 100% { box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.2); }
-  50% { box-shadow: 0 0 0 6px rgba(74, 222, 128, 0.1); }
-}
-
-.hero-badge-text {
-  font-size: 12px;
-  line-height: 1.4;
-}
-
-.hero-badge-text strong {
-  display: block;
-  font-weight: 500;
-  color: var(--text-primary);
-}
-
-.hero-badge-text span {
-  color: var(--text-muted);
-  font-size: 11px;
 }
 
 /* Scroll indicator */
@@ -2104,10 +2065,6 @@ body.page-booking  .nav-link-booking::after {
   .hero-visual {
     max-width: 400px;
     margin: 0 auto;
-  }
-
-  .hero-badge {
-    left: 0;
   }
 
   .intro-inner {
