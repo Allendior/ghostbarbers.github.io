@@ -433,6 +433,21 @@
 
   </main>
 
+  <!-- ===== LIGHTBOX ===== -->
+  <div class="lb-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Image lightbox">
+    <button class="lb-close" id="lbClose" aria-label="Close">&times;</button>
+    <button class="lb-arrow lb-prev" id="lbPrev" aria-label="Previous image">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="lb-image-wrap" id="lbImageWrap">
+      <img class="lb-img" id="lbImg" src="" alt="Ghost Barbers" />
+    </div>
+    <button class="lb-arrow lb-next" id="lbNext" aria-label="Next image">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7 4l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="lb-counter" id="lbCounter"></div>
+  </div>
+
   <!-- ===== FOOTER ===== -->
   <footer class="footer">
     <div class="container">
@@ -566,6 +581,77 @@
     }
     // Apply immediately — no flash
     applyLanguage(localStorage.getItem('gb_lang') || 'en');
+
+    // =====================================================
+    // LIGHTBOX
+    // =====================================================
+    (function () {
+      const overlay   = document.getElementById('lightbox');
+      const lbImg     = document.getElementById('lbImg');
+      const lbCounter = document.getElementById('lbCounter');
+      const lbPrev    = document.getElementById('lbPrev');
+      const lbNext    = document.getElementById('lbNext');
+      const lbClose   = document.getElementById('lbClose');
+      const lbWrap    = document.getElementById('lbImageWrap');
+
+      // Collect all gallery images in order
+      const galleryImgs = Array.from(
+        document.querySelectorAll('.gallery-grid .gallery-item img')
+      );
+      let current = 0;
+
+      function open(index) {
+        current = (index + galleryImgs.length) % galleryImgs.length;
+        const src = galleryImgs[current].src;
+        lbImg.src = src;
+        lbCounter.textContent = (current + 1) + ' / ' + galleryImgs.length;
+        overlay.classList.add('lb-visible');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function close() {
+        overlay.classList.remove('lb-visible');
+        document.body.style.overflow = '';
+        // Delay clearing src so fade-out looks clean
+        setTimeout(() => { lbImg.src = ''; }, 300);
+      }
+
+      function prev() { open(current - 1); }
+      function next() { open(current + 1); }
+
+      // Wire up gallery item clicks
+      galleryImgs.forEach((img, i) => {
+        img.parentElement.style.cursor = 'zoom-in';
+        img.parentElement.addEventListener('click', () => open(i));
+      });
+
+      lbPrev.addEventListener('click', e => { e.stopPropagation(); prev(); });
+      lbNext.addEventListener('click', e => { e.stopPropagation(); next(); });
+      lbClose.addEventListener('click', close);
+
+      // Click outside image closes
+      overlay.addEventListener('click', e => {
+        if (e.target === overlay || e.target === lbWrap) close();
+      });
+
+      // Keyboard
+      document.addEventListener('keydown', e => {
+        if (!overlay.classList.contains('lb-visible')) return;
+        if (e.key === 'ArrowLeft')  prev();
+        if (e.key === 'ArrowRight') next();
+        if (e.key === 'Escape')     close();
+      });
+
+      // Touch swipe
+      let touchStartX = 0;
+      overlay.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].clientX;
+      }, { passive: true });
+      overlay.addEventListener('touchend', e => {
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(dx) > 40) dx < 0 ? next() : prev();
+      }, { passive: true });
+    })();
   </script>
 </body>
 </html>
