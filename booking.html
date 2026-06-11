@@ -393,8 +393,8 @@
     // =====================================================
     const EMAILJS_PUBLIC_KEY           = 'nlUn1M5W7lZmK4USu';
     const EMAILJS_SERVICE_ID           = 'service_53m7pmd';
-    const EMAILJS_CONFIRM_TEMPLATE_ID  = 'tto1ivf';
-    const EMAILJS_BARBER_TEMPLATE_ID   = 'od3z4xm';
+    const EMAILJS_CONFIRM_TEMPLATE_ID  = 'template_xto1ivf';
+    const EMAILJS_BARBER_TEMPLATE_ID   = 'template_od3z4xm';
     // =====================================================
 
     // Initialize EmailJS
@@ -516,7 +516,7 @@
       }
 
       // 1. Send customer "booking received" email
-      emailjs.send('service_53m7pmd', 'tto1ivf', {
+      emailjs.send('service_53m7pmd', 'template_xto1ivf', {
         to_email:  email,
         to_name:   name,
         service:   cleanService,
@@ -526,7 +526,7 @@
       .catch(err => console.error('Customer email failed:', err));
 
       // 2. Send barber alert email
-      emailjs.send('service_53m7pmd', 'od3z4xm', {
+      emailjs.send('service_53m7pmd', 'template_od3z4xm', {
         to_email:      'punitp2754@gmail.com',
         customer_name:  name,
         customer_phone: phone,
