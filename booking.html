@@ -398,7 +398,7 @@
     // =====================================================
 
     // Initialize EmailJS
-    emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+    emailjs.init('nlUn1M5W7lZmK4USu');
 
     // =====================================================
     // BLOCKED SLOTS — check after date is picked
@@ -497,74 +497,50 @@
         weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
       });
 
-      // Template parameters for the confirmation email
-      const confirmParams = {
-        to_name:    name,
-        to_email:   email,
-        client_phone: phone,
-        service:    service,
-        appt_date:  formattedDate,
-        appt_time:  time,
-        notes:      notes || 'None',
-        reply_to:   email
-      };
+      const cleanService = service.replace(/ — \$\d+/, '');
 
-      try {
-        const cleanService = service.replace(/ — \$\d+/, '');
+      const enc = encodeURIComponent;
+      const baseParams = `name=${enc(name)}&email=${enc(email)}&service=${enc(cleanService)}&date=${enc(formattedDate)}&time=${enc(time)}`;
+      const confirmUrl = `https://ghostbarbers.ca/confirm.html?action=confirm&${baseParams}`;
+      const rejectUrl  = `https://ghostbarbers.ca/confirm.html?action=reject&${baseParams}`;
 
-        // Build confirm/reject URLs for the barber
-        const params = new URLSearchParams({ name, email, service: cleanService, date: formattedDate, time });
-        const confirmUrl = `https://ghostbarbers.ca/confirm.html?action=confirm&${params}`;
-        const rejectUrl  = `https://ghostbarbers.ca/confirm.html?action=reject&${params}`;
-
-        // 1. Send customer "received" email
-        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_CONFIRM_TEMPLATE_ID, {
-          to_name: name, to_email: email,
-          client_phone: phone, service: cleanService,
-          appt_date: formattedDate, appt_time: time,
-          notes: notes || 'None', reply_to: email
-        });
-
-        // 2. Send barber notification email
-        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_BARBER_TEMPLATE_ID, {
-          to_email:     'punitp2754@gmail.com',
-          client_name:  name,
-          client_phone: phone,
-          client_email: email,
-          service:      cleanService,
-          appt_date:    formattedDate,
-          appt_time:    time,
-          notes:        notes || 'None',
-          confirm_url:  confirmUrl,
-          reject_url:   rejectUrl
-        }).catch(err => console.warn('Barber notification failed:', err));
-
-        // Store booking for 30-day reminder
-        const bookings = JSON.parse(localStorage.getItem('ghostbarbers_bookings') || '[]');
-        bookings.push({ name, email, service, date, timestamp: Date.now(), reminderSent: false });
-        localStorage.setItem('ghostbarbers_bookings', JSON.stringify(bookings));
-
-        // Populate summary card fields
+      // Always show confirmation — email failure shouldn't block the user
+      function showConfirmation() {
         document.getElementById('confName').textContent    = name;
         document.getElementById('confService').textContent = cleanService;
         document.getElementById('confDate').textContent    = formattedDate;
         document.getElementById('confTime').textContent    = time;
         document.getElementById('confEmail').textContent   = email;
-
-        // Show success state
         formContainer.style.display = 'none';
         confirmationEl.classList.add('visible');
-
-      } catch (err) {
-        console.error('EmailJS error:', err);
-        // Show a graceful error without losing the user's data
-        submitBtn.classList.remove('loading');
-        submitBtn.disabled = false;
-        alert(
-          "Something went wrong sending the confirmation email — but don't worry, " +
-          "you can still reach the barber directly. Please try again or call us."
-        );
       }
+
+      // 1. Send customer "booking received" email
+      emailjs.send('service_53m7pmd', 'tto1ivf', {
+        to_email:  email,
+        to_name:   name,
+        service:   cleanService,
+        appt_date: formattedDate,
+        appt_time: time
+      }, 'nlUn1M5W7lZmK4USu')
+      .catch(err => console.error('Customer email failed:', err));
+
+      // 2. Send barber alert email
+      emailjs.send('service_53m7pmd', 'od3z4xm', {
+        to_email:      'punitp2754@gmail.com',
+        customer_name:  name,
+        customer_phone: phone,
+        customer_email: email,
+        service:        cleanService,
+        appt_date:      formattedDate,
+        appt_time:      time,
+        notes:          notes || 'None',
+        confirm_url:    confirmUrl,
+        reject_url:     rejectUrl
+      }, 'nlUn1M5W7lZmK4USu')
+      .catch(err => console.error('Barber email failed:', err));
+
+      showConfirmation();
     });
 
     // =====================================================
