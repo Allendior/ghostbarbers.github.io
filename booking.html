@@ -391,11 +391,10 @@
     // =====================================================
     // EMAILJS CONFIGURATION — FILL THESE IN
     // =====================================================
-    const EMAILJS_PUBLIC_KEY           = 'YOUR_PUBLIC_KEY';
-    const EMAILJS_SERVICE_ID           = 'YOUR_SERVICE_ID';
-    const EMAILJS_CONFIRM_TEMPLATE_ID  = 'YOUR_CONFIRMATION_TEMPLATE_ID';
-    const EMAILJS_REMINDER_TEMPLATE_ID = 'YOUR_REMINDER_TEMPLATE_ID';
-    const EMAILJS_BARBER_TEMPLATE_ID   = 'YOUR_BARBER_NOTIFICATION_TEMPLATE_ID';
+    const EMAILJS_PUBLIC_KEY           = 'nlUn1M5W7lZmK4USu';
+    const EMAILJS_SERVICE_ID           = 'service_53m7pmd';
+    const EMAILJS_CONFIRM_TEMPLATE_ID  = 'tto1ivf';
+    const EMAILJS_BARBER_TEMPLATE_ID   = 'od3z4xm';
     // =====================================================
 
     // Initialize EmailJS
@@ -457,45 +456,6 @@
       });
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-    // =====================================================
-    // 30-DAY REMINDER LOGIC
-    // On every page load, check localStorage for past bookings.
-    // If any booking was made ~30 days ago and a reminder hasn't
-    // been sent yet, fire the reminder email via EmailJS.
-    // =====================================================
-    function checkAndSendReminders() {
-      const bookings = JSON.parse(localStorage.getItem('ghostbarbers_bookings') || '[]');
-      if (!bookings.length) return;
-
-      const now = Date.now();
-      const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
-      // Allow a 3-day window (days 30–33) so a daily visitor doesn't miss it
-      const WINDOW_MS = 3 * 24 * 60 * 60 * 1000;
-
-      bookings.forEach((booking, index) => {
-        const age = now - booking.timestamp;
-        if (age >= THIRTY_DAYS_MS && age <= (THIRTY_DAYS_MS + WINDOW_MS) && !booking.reminderSent) {
-          // Fire reminder email
-          emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_REMINDER_TEMPLATE_ID, {
-            to_name:  booking.name,
-            to_email: booking.email,
-            booking_url: 'https://ghostbarbers.ca/booking.html'
-          })
-          .then(() => {
-            // Mark as sent so we don't send it again
-            bookings[index].reminderSent = true;
-            localStorage.setItem('ghostbarbers_bookings', JSON.stringify(bookings));
-          })
-          .catch(err => {
-            console.warn('Ghost Barbers: reminder email failed to send.', err);
-          });
-        }
-      });
-    }
-
-    // Run the reminder check on every page load
-    checkAndSendReminders();
 
     // =====================================================
     // BOOKING FORM SUBMIT

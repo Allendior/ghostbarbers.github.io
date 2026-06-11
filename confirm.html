@@ -107,7 +107,6 @@
       .confirm-card { padding: 32px 20px; }
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body class="page-booking">
 
@@ -125,17 +124,6 @@
   </div>
 
   <script>
-    // =====================================================
-    // USE THE SAME KEYS AS booking.html
-    // =====================================================
-    const EMAILJS_PUBLIC_KEY          = 'YOUR_PUBLIC_KEY';
-    const EMAILJS_SERVICE_ID          = 'YOUR_SERVICE_ID';
-    const EMAILJS_CONFIRMED_TEMPLATE_ID = 'YOUR_CONFIRMED_CUSTOMER_TEMPLATE_ID';
-    const EMAILJS_REJECTED_TEMPLATE_ID  = 'YOUR_REJECTED_CUSTOMER_TEMPLATE_ID';
-    // =====================================================
-
-    emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
-
     const params  = new URLSearchParams(window.location.search);
     const action  = params.get('action');
     const name    = params.get('name')    || 'Client';
@@ -171,43 +159,22 @@
     }
 
     if (action === 'confirm') {
-      icon.className  = 'confirm-icon success';
+      icon.className   = 'confirm-icon success';
       icon.textContent = '✓';
-      title.className = 'confirm-title success';
+      title.className  = 'confirm-title success';
       title.textContent = 'Appointment Confirmed!';
-      msg.textContent  = `Hi ${name}, your appointment has been confirmed. We look forward to seeing you!`;
+      msg.textContent   = `Hi ${name}, your appointment has been confirmed. We look forward to seeing you!`;
       details.innerHTML = buildDetails();
-      note.textContent  = 'A confirmation email has been sent to the client.';
-
-      if (email) {
-        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_CONFIRMED_TEMPLATE_ID, {
-          to_name:  name,
-          to_email: email,
-          service,
-          appt_date: date,
-          appt_time: time
-        }).catch(err => console.warn('Confirmed email failed:', err));
-      }
+      note.textContent  = 'The barber will be in touch with the studio address shortly.';
 
     } else if (action === 'reject') {
       icon.className   = 'confirm-icon reject';
       icon.textContent = '✕';
       title.className  = 'confirm-title reject';
-      title.textContent = 'Appointment Unavailable';
-      msg.textContent   = `Hi ${name}, this slot is unavailable. A notification has been sent to the client asking them to rebook.`;
+      title.textContent = 'Sorry, That Slot Is Unavailable';
+      msg.textContent   = `Hi ${name}, unfortunately this time slot is no longer available. Please book a different time.`;
       details.innerHTML = buildDetails();
-      note.textContent  = 'The client has been notified and directed to rebook.';
-
-      if (email) {
-        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_REJECTED_TEMPLATE_ID, {
-          to_name:   name,
-          to_email:  email,
-          service,
-          appt_date: date,
-          appt_time: time,
-          booking_url: 'https://ghostbarbers.ca/booking.html'
-        }).catch(err => console.warn('Rejected email failed:', err));
-      }
+      note.innerHTML    = '<a href="booking.html" class="btn btn-outline" style="display:inline-flex;margin-top:8px;">Book a Different Time</a>';
 
     } else {
       title.textContent = 'Invalid Link';
